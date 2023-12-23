@@ -44,7 +44,28 @@ async function run() {
         const result = await taskCollections.deleteOne(filter)
         res.send(result)
     })
-  
+    app.patch('/todo/ongoing/:id', async(req, res) =>{
+        const id = req.params.id
+        const filter = { _id: new ObjectId(id) };
+        const updateDoc = {
+            $set: {
+                status:'ongoing'
+            }
+        }
+        const result = await taskCollections.updateOne(filter, updateDoc)
+        res.send(result)
+    })
+    app.patch('/todo/complete/:id', async(req, res) =>{
+        const id = req.params.id
+        const filter = { _id: new ObjectId(id) };
+        const updateDoc = {
+            $set: {
+                status:'complete'
+            }
+        }
+        const result = await taskCollections.updateOne(filter, updateDoc)
+        res.send(result)
+    })
 
 
     await client.db("admin").command({ ping: 1 });
