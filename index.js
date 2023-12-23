@@ -23,7 +23,23 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // await client.connect();
-   
+    const taskCollections = client.db("taskForge").collection("allTask")
+
+    app.post('/todo', async(req, res) =>{
+        const todo = req.body;
+        const result = await taskCollections.insertOne(todo)
+        res.send(result)
+    })
+    app.get('/todo', async(req, res) =>{
+        const query = req.query.status
+        const email = req.query.email
+        console.log(query,email, 'this is a query');
+        const filter =  {status : query, taskCreator: email}
+        const result = await taskCollections.find(filter).toArray()
+        res.send(result)
+    })
+ 
+
 
     await client.db("admin").command({ ping: 1 });
     console.log(
